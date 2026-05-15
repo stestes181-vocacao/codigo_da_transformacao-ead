@@ -14,7 +14,6 @@ while True:
         print("Item adicionado")
 
     elif opcao == "2":
-
         item = input("Digite o item para remover: ")
 
         if item in lista:
@@ -26,13 +25,11 @@ while True:
             print("Item não encontrado")
 
     elif opcao == "3":
-
         print("\nLista atual:")
 
         for item in lista:
             print("-", item)
 
     elif opcao == "4":
-
         print("Programa encerrado")
         break
