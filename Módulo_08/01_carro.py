@@ -1,4 +1,4 @@
-# Classe Carro 
+ 
 class Carro:
     def __init__(self, marca, modelo):
         self.marca = marca
@@ -11,7 +11,6 @@ class Carro:
         return f"{self.marca} {self.modelo} 💎"
 
 
-# Classe CarroEletrico
 class CarroEletrico(Carro):
     def __init__(self, marca, modelo, autonomia_bateria):
         super().__init__(marca, modelo)
@@ -24,11 +23,10 @@ class CarroEletrico(Carro):
         return f"{self.marca} {self.modelo} ⚡ ({self.autonomia_bateria}km)"
 
 
-# Meus carros 😌
-carro1 = Carro("Rolls-Royce", "Phantom")
-carro2 = CarroEletrico("BYD", "Han", 600)
+carro1 = Carro("BMW", "M8")
+carro2 = CarroEletrico("BMW", "i7", 600)
 
-# Exibindo
+
 carro1.exibir_info()
 carro2.exibir_info()
 

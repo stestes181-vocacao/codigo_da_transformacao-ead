@@ -1,6 +1,4 @@
-# ==========================================
-# CLASSE: LIVRO
-# ==========================================
+
 class Livro:
     def __init__(self, titulo, autor):
         self.titulo = titulo
@@ -13,9 +11,7 @@ class Livro:
         return f"'{self.titulo}' por {self.autor} [{status}]"
 
 
-# ==========================================
-# CLASSE: BIBLIOTECA
-# ==========================================
+
 class Biblioteca:
     def __init__(self):
         self.livros = []
@@ -36,7 +32,7 @@ class Biblioteca:
 
     def emprestar_livro(self, titulo):
         for livro in self.livros:
-            # .lower() garante que "harry potter" encontre "Harry Potter"
+            
             if livro.titulo.lower() == titulo.lower():
                 if livro.disponivel:
                     livro.disponivel = False
@@ -61,38 +57,38 @@ class Biblioteca:
                     
         print(f"❌ Erro: O livro '{titulo}' não pertence a esta biblioteca.")
 
-# testando código da biblioteca
+
 if __name__ == "__main__":
-    # 1. Inicializando a biblioteca
+    
     minha_biblioteca = Biblioteca()
     print("--- Inicializando o Sistema ---\n")
 
-    # 2. Criando e adicionando livros
-    livro1 = Livro("Harry Potter", "J.K. Rowling")
-    livro2 = Livro("Dom Casmurro", "Machado de Assis")
-    livro3 = Livro("O Alquimista", "Paulo Coelho")
+    
+    livro1 = Livro("sherlock holmes", "arthur conan coyle")
+    livro2 = Livro("o pequeno prícipe", "antoine de saint-exupéry")
+    livro3 = Livro("percy jackson", "rick riordan")
 
     minha_biblioteca.adicionar_livro(livro1)
     minha_biblioteca.adicionar_livro(livro2)
     minha_biblioteca.adicionar_livro(livro3)
 
-    # 3. Exibindo o catálogo inicial
+    
     minha_biblioteca.listar_livros()
 
-    # 4. Simulando um empréstimo (com letras minúsculas para testar a busca inteligente)
+    
     print("\n[Ação] Solicitando empréstimo de 'harry potter'...")
     minha_biblioteca.emprestar_livro("harry potter")
 
-    # 5. Tentando emprestar o mesmo livro de novo (deve dar erro)
+    
     print("\n[Ação] Tentando pegar o mesmo livro de novo...")
-    minha_biblioteca.emprestar_livro("Harry Potter")
+    minha_biblioteca.emprestar_livro("sherlock holmes")
 
-    # 6. Verificando o catálogo após o empréstimo
+    
     minha_biblioteca.listar_livros()
 
-    # 7. Devolvendo o livro
+    
     print("\n[Ação] Devolvendo o livro...")
-    minha_biblioteca.devolver_livro("Harry Potter")
+    minha_biblioteca.devolver_livro("sherlock holmes")
 
-    # 8. Catálogo finalizado e atualizado
+    
     minha_biblioteca.listar_livros()
