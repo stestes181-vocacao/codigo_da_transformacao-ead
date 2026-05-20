@@ -1,50 +1,83 @@
-import requests  # 1. Fazemos a importação da biblioteca para internet
+import requests
+import tkinter as tk
+from tkinter import messagebox
+from tkinter import scrolledtext
 
-def consultar_feriados(ano):
-    # Definimos a URL da API brasileira (BrasilAPI) usando o ano escolhido
+# --- FUNÇÃO LOGICA DA API E TRATAMENTO DE ERROS ---
+def buscar_feriados():
+    # Captura o ano que o usuário digitou no campo de entrada
+    ano = entrada_ano.get().strip()
+    
+    # Validação básica: verifica se o campo está vazio
+    if not ano:
+        messagebox.showwarning("Aviso", "Por favor, digite um ano!")
+        return
+        
+    # Limpa a área de texto antes de exibir o novo resultado
+    area_texto.delete(1.0, tk.END)
+    area_texto.insert(tk.END, f"Buscando feriados para o ano {ano}...\n\n")
+    
+    # URL da API brasileira de feriados
     url = f"https://brasilapi.com.br/api/feriados/v1/{ano}"
     
-    print(f"\n--- Buscando feriados nacionais do ano {ano} ---")
-    
     try:
-        # 2. Tentamos fazer a requisição HTTP (pedido ao servidor)
+        # Tentativa de requisição HTTP
         resposta = requests.get(url)
         
-        # Se o status_code for 404, significa que o ano é inválido ou não encontrado
+        # Se a API retornar erro 404 (ano não encontrado)
         if resposta.status_code == 404:
-            print("Erro: Ano não encontrado ou fora do limite do sistema.")
+            messagebox.showerror("Erro", "Ano não encontrado ou fora do limite do sistema!")
+            area_texto.delete(1.0, tk.END)
             return
             
-        # Verifica se houve qualquer outro erro de transmissão (Ex: Status 500)
+        # Força o disparo de exceção para outros erros HTTP (ex: 500)
         resposta.raise_for_status()
         
-        # 3. Convertemos a resposta para o formato que o Python entende (Lista de Dicionários)
+        # Converte a resposta em formato JSON (Lista de Dicionários)
         feriados = resposta.json()
         
-        # 4. Exibimos dados específicos filtrados
-        print(f"\n🎉 Feriados encontrados:")
+        # Limpa o texto de "Buscando..." para colocar o resultado final
+        area_texto.delete(1.0, tk.END)
+        area_texto.insert(tk.END, f"🎉 Feriados Nacionais em {ano}:\n")
+        area_texto.insert(tk.END, "="*40 + "\n\n")
+        
+        # Filtragem e exibição dos dados específicos
         for feriado in feriados:
-            # Filtramos e exibimos apenas a Data e o Nome do feriado
-            print(f"📅 Data: {feriado['date']} | 🎈 Feriado: {feriado['name']}")
+            # Formatando a exibição da data e nome do feriado
+            texto_feriado = f"📅 Data: {feriado['date']} | 🎈 {feriado['name']}\n"
+            area_texto.insert(tk.END, texto_feriado)
             
     except requests.exceptions.ConnectionError:
-        # Trata o erro se o aluno estiver sem internet no momento
-        print("Erro de Conexão: Verifique se você está conectado à internet!")
+        # Se houver falha na conexão de internet
+        messagebox.showerror("Erro de Conexão", "Não foi possível conectar à internet!")
+        area_texto.delete(1.0, tk.END)
         
-    except requests.exceptions.HTTPError as erro_http:
-        # Trata erros específicos de requisição HTTP
-        print(f"Erro na requisição HTTP: {erro_http}")
-        
-    except Exception as erro:
-        # Um 'apanha-tudo' para qualquer outro imprevisto
-        print(f"Ocorreu um erro inesperado: {erro}")
-        
-    finally:
-        print("--- Fim da consulta de feriados ---")
+    except Exception as e:
+        # Captura qualquer outra exceção inesperada
+        messagebox.showerror("Erro Inesperado", f"Ocorreu um erro: {e}")
+        area_texto.delete(1.0, tk.END)
 
-# --- TESTANDO NA PRÁTICA ---
-print("=== Aula de API com Python: Feriados Nacionais ===")
+# --- CONSTRUÇÃO DA INTERFACE GRÁFICA (TELA) ---
+# 1. Criando a janela principal
+janela = tk.Tk()
+janela.title("Buscador de Feriados Brasileiros")
+janela.geometry("500x450")
 
-# Pedindo o ano para o aluno interagir
-ano_letivo = input("Digite o ano que deseja consultar (ex: 2026): ")
-consultar_feriados(ano_letivo)
+# 2. Rótulo explicativo (Label)
+rotulo = tk.Label(janela, text="Digite o ano desejado (ex: 2026):", font=("Arial", 11))
+rotulo.pack(pady=10)
+
+# 3. Campo de entrada de texto (Entry)
+entrada_ano = tk.Entry(janela, font=("Arial", 12), width=15, justify="center")
+entrada_ano.pack(pady=5)
+
+# 4. Botão de comando (Button) ligado à nossa função
+botao_buscar = tk.Button(janela, text="Buscar Feriados", font=("Arial", 10, "bold"), bg="#4CAF50", fg="white", command=buscar_feriados)
+botao_buscar.pack(pady=10)
+
+# 5. Área de texto com barra de rolagem integrada (ScrolledText) para os resultados
+area_texto = scrolledtext.ScrolledText(janela, width=55, height=18, font=("Courier New", 10))
+area_texto.pack(pady=10)
+
+# Inicializa e mantém a tela aberta esperando interações
+janela.mainloop()
