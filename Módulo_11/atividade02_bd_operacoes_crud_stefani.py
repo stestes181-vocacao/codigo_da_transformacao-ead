@@ -35,7 +35,6 @@ cursor.execute('''
                
     ('Pedro Henrique', 'carlos.santos@mail.com')
                
-
 ''')
 
 conn.commit()
