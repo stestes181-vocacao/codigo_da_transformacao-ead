@@ -16,7 +16,7 @@ def buscar_feriados():
     area_texto.insert(tk.END, f"Buscando feriados para o ano {ano}...\n\n")
     
     
-    url = f"https://brasilapi.com.br/api/feriados/v1/{ano}"
+    url = f"chttps://brasilapi.com.br/api/feriados/v1/{ano}"
     
     try:
         
