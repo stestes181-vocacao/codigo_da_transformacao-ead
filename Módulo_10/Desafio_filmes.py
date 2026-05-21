@@ -1,52 +1,51 @@
 import requests
 
-def consultar_dados_ddd(ddd):
-    
-    url = f"https://brasilapi.com.br/api/ddd/v1/{ddd}"
-    
-    print(f"\n--- Conectando à API para o DDD {ddd} ---")
-    
-    try:
-        
-        resposta = requests.get(url)
-        
-        
-        if resposta.status_code == 404:
-            print(f"❌ Erro: O DDD {ddd} não é um código de área válido no Brasil.")
-            return
-            
-        resposta.raise_for_status()
-        
-        
-        dados = resposta.json()
-        
-       
-        estado = dados['state']       # Filtra a sigla do Estado (ex: SP, RJ, BA)
-        cidades = dados['cities']     # Filtra a lista com todas as cidades do DDD
-        
-        print(f"\n📍 Estado localizado: {estado}")
-        print(f"🏙️ Cidades que usam o DDD {ddd} (Total: {len(cidades)}):")
-        print("-" * 40)
-        
-        # Listando as cidades - organizada
-        for cidade in cidades:
-            print(f"• {cidade}")
-            
-    # Tratar erros de conexão e falhas HTTP
-    except requests.exceptions.ConnectionError:
-        print("\n❌ Erro de Rede: Verifique se o seu computador está conectado à internet!")
-        
-    except requests.exceptions.HTTPError as erro_http:
-        print(f"\n❌ Erro HTTP encontrado: {erro_http}")
-        
-    except Exception as erro:
-        print(f"\n❌ Ocorreu um erro imprevisto: {erro}")
-        
-    finally:
-        print("\n--- Fim da verificação de telecomunicação ---")
+API_KEY = "MY_API_KEY"
 
-# --- EXECUÇÃO---
-print("=== Atividade Prática: Descobrir Cidades por DDD ===")
-codigo_area = input("Digite o DDD que deseja consultar (apenas os 2 números, ex: 11): ").strip()
+# Nome 
+filme = input("Digite o nome do filme: ")
 
-consultar_dados_ddd(codigo_area)
+# URL 
+url = f"https://api.themoviedb.org/3/search/movie?api_key={API_KEY}&query={filme}&language=pt-BR"
+
+try:
+
+    
+    resposta = requests.get(url)
+
+    
+    resposta.raise_for_status()
+
+    
+    dados = resposta.json()
+
+    
+    if dados["results"]:
+
+        resultado = dados["results"][0]
+
+        print("\n🎬 FILME ENCONTRADO 🎬\n")
+
+        print("Título:", resultado["title"])
+
+        print("Data de lançamento:", resultado["release_date"])
+
+        print("Nota:", resultado["vote_average"])
+
+        print("Sinopse:")
+        print(resultado["overview"])
+
+    else:
+
+        print("❌ Filme não encontrado!")
+
+
+except requests.exceptions.ConnectionError:
+
+    print("❌ Sem conexão com internet!")
+
+
+except Exception as erro:
+
+    print("❌ Ocorreu um erro:")
+    print(erro)
