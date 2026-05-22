@@ -1,22 +1,16 @@
-# importar biblioteca
 import sqlite3
 
-# conectar banco de dados
-conn = sqlite3.connect('atividade_info_cliente.db')
-
-# executar o sql
+conn = sqlite3.connect("artistas_clientes.db")
 cursor = conn.cursor()
 
-cursor.execute('''
-               
-    CREATE TABLE IF NOT EXISTS clientes (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nome TEXT NOT NULL,
-        email TEXT NOT NULL
-    )
-               
-''')
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS Clientes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL
+)
+""")
 
 conn.commit()
 
-print("Atividade 1 concluída: Tabela criada.")
+print("✔ Banco e tabela criados com sucesso")
