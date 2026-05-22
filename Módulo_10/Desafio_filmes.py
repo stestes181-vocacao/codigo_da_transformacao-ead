@@ -12,14 +12,10 @@ try:
 
     
     resposta = requests.get(url)
-
-    
     resposta.raise_for_status()
 
     
     dados = resposta.json()
-
-    
     if dados["results"]:
 
         resultado = dados["results"][0]
