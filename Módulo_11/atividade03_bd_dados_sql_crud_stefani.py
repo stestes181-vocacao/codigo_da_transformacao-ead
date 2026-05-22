@@ -1,63 +1,82 @@
 import sqlite3
 
-conn = sqlite3.connect('anime_clientes.db')
+conn = sqlite3.connect('artistas_clientes.db')
 cursor = conn.cursor()
 
-# Reset com dados mais completos
 cursor.execute('DROP TABLE IF EXISTS Clientes')
+
 cursor.execute('''
 CREATE TABLE Clientes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nome TEXT,
     email TEXT,
-    anime_origem TEXT
+    genero_musical TEXT
 )
 ''')
 
-# Dados com anime de origem
-animes_data = [
-    ("Naruto Uzumaki", "naruto@aldeiafolha.com", "Naruto"),
-    ("Sasuke Uchiha", "sasuke@uchiha.com", "Naruto"),
-    ("Monkey D. Luffy", "luffy@gear5.com", "One Piece"),
-    ("Roronoa Zoro", "zoro@santoryu.com", "One Piece"),
-    ("Goku", "goku@sayajin.com", "Dragon Ball"),
-    ("Vegeta", "vegeta@orgulhosayajin.com", "Dragon Ball"),
-    ("Eren Yeager", "eren@shiganshina.com", "Attack on Titan"),
-    ("Mikasa Ackerman", "mikasa@ackerman.com", "Attack on Titan"),
-    ("Tanjiro Kamado", "tanjiro@kisatsu.com", "Demon Slayer"),
-    ("Gojo Satoru", "gojo@mugen.com", "Jujutsu Kaisen"),
-    ("Light Yagami", "light@deathnote.com", "Death Note"),
-    ("L Lawliet", "l@watari.com", "Death Note")
+artistas_data = [
+    ("Taylor Swift", "taylor@music.com", "Pop"),
+    ("Billie Eilish", "billie@music.com", "Pop"),
+    ("The Weeknd", "weeknd@music.com", "R&B"),
+    ("Ariana Grande", "ariana@music.com", "Pop"),
+    ("Drake", "drake@music.com", "Rap"),
+    ("Bruno Mars", "bruno@music.com", "Funk Pop"),
+    ("Dua Lipa", "dua@music.com", "Dance Pop"),
+    ("Ed Sheeran", "ed@music.com", "Pop"),
+    ("Rihanna", "rihanna@music.com", "R&B"),
+    ("Justin Bieber", "justin@music.com", "Pop")
 ]
 
-cursor.executemany("INSERT INTO Clientes (nome, email, anime_origem) VALUES (?, ?, ?)", animes_data)
+cursor.executemany("""
+INSERT INTO Clientes (nome, email, genero_musical)
+VALUES (?, ?, ?)
+""", artistas_data)
+
 conn.commit()
 
-print("🎴 CONSULTAS COM CHAKRA AVANÇADO 🎴\n")
+print("🎧 CONSULTAS MUSICAIS AVANÇADAS 🎧\n")
 
-# 1. Personagens com nome começando em 'G'
-cursor.execute("SELECT * FROM Clientes WHERE nome LIKE 'G%'")
-print("⚡ Personagens com nome começando em 'G':")
+# 1. nome começando em 'D'
+cursor.execute("""
+SELECT * FROM Clientes
+WHERE nome LIKE 'D%'
+""")
+
+print("⚡ Artistas com nome começando em 'D':")
 for r in cursor.fetchall():
-    print(f"   👤 {r[1]} | 📧 {r[2]} | 🎬 {r[3]}")
+    print(f"   🎤 {r[1]} | 📧 {r[2]} | 🎶 {r[3]}")
 
-# 2. Personagens do anime "One Piece"
-cursor.execute("SELECT * FROM Clientes WHERE anime_origem = 'One Piece'")
-print("\n☠️ Tripulação do Chapéu de Palha (One Piece):")
+# 2.  gênero Pop
+cursor.execute("""
+SELECT * FROM Clientes
+WHERE genero_musical = 'Pop'
+""")
+
+print("\n🎵 Artistas do gênero Pop:")
 for r in cursor.fetchall():
-    print(f"   🏴‍☠️ {r[1]} - {r[2]}")
+    print(f"   🎧 {r[1]} - {r[2]}")
 
-# 3. Personagens com 'a' no nome (case insensitive)
-cursor.execute("SELECT * FROM Clientes WHERE nome LIKE '%a%' ORDER BY nome")
-print("\n📜 Personagens com a letra 'a' no nome:")
-for i, r in enumerate(cursor.fetchall()[:8], 1):
+cursor.execute("""
+SELECT * FROM Clientes
+WHERE nome LIKE '%a%'
+ORDER BY nome
+""")
+
+print("\n📜 Artistas com a letra 'a' no nome:")
+for i, r in enumerate(cursor.fetchall(), 1):
     print(f"   {i}. {r[1]} ({r[3]})")
 
-# 4. Quantos personagens por anime
-cursor.execute("SELECT anime_origem, COUNT(*) FROM Clientes GROUP BY anime_origem")
-print("\n📊 Ranking de animes no banco de dados:")
-for anime, total in cursor.fetchall():
-    barra = "🟣" * total
-    print(f"   {anime:15} : {total} personagem(ns) {barra}")
+cursor.execute("""
+SELECT genero_musical, COUNT(*)
+FROM Clientes
+GROUP BY genero_musical
+""")
+
+print("\n📊 Ranking de gêneros musicais:")
+for genero, total in cursor.fetchall():
+    barra = "🎶" * total
+    print(f"   {genero:12} : {total} artista(s) {barra}")
 
 conn.close()
+
+print("\n✔ Questão 3 concluída com sucesso 🎧")
